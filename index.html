@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Paste an Ontario residential lease and see which clauses the Residential Tenancies Act makes void. Runs entirely in your browser." />
+    <title>LeaseLens · Check an Ontario lease</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6f5c'/%3E%3Ccircle cx='28' cy='28' r='13' fill='none' stroke='white' stroke-width='6'/%3E%3Cpath d='M38 38l12 12' stroke='white' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#results">Skip to results</a>
+    <header class="top">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🔍</span>
+        <div>
+          <h1>LeaseLens</h1>
+          <p class="tagline">Paste an Ontario residential lease. See which clauses the law says don’t count.</p>
+        </div>
+      </div>
+      <p class="privacy" title="LeaseLens has no server. Nothing you paste is sent or stored anywhere.">
+        <span aria-hidden="true">🔒</span> Runs in your browser. Your lease never leaves this page.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="input" aria-labelledby="lease-label">
+        <div class="input-head">
+          <label id="lease-label" for="lease">Lease text</label>
+          <div class="actions">
+            <button type="button" id="example" class="secondary">Try an example</button>
+            <button type="button" id="clear" class="secondary">Clear</button>
+          </div>
+        </div>
+        <textarea id="lease" spellcheck="false" placeholder="Paste the lease here, or at least the “Additional terms” section (Schedule A). Results update as you type."></textarea>
+        <p class="hint">Works best on the extra terms a landlord adds. The standard form’s own wording is already compliant.</p>
+      </section>
+
+      <section id="results" class="results" aria-live="polite" aria-labelledby="results-title">
+        <h2 id="results-title" class="sr-only">Results</h2>
+        <div id="summary" class="summary"></div>
+        <ol id="findings" class="findings"></ol>
+        <div id="empty" class="empty">
+          <p><strong>What LeaseLens checks</strong></p>
+          <p>Common clauses that Ontario’s <em>Residential Tenancies Act</em> makes void: no-pets rules, damage deposits, late fees, required post-dated cheques, guest limits, entry without notice, “tenant pays all repairs”, early rent increases and more. Each result cites the section of the law and links to the official text.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p><strong>Not legal advice.</strong> LeaseLens spots common problem clauses using pattern rules; it can miss things and can’t judge your specific situation. For help, contact the <a href="https://tribunalsontario.ca/ltb/">Landlord and Tenant Board</a> or a community legal clinic (<a href="https://stepstojustice.ca/">Steps to Justice</a>).</p>
+      <p>Law current to November 10, 2026. Built by <a href="https://github.com/mertmetin">Mert Metin</a> · <a href="https://github.com/mertmetin/leaselens">Source</a></p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
