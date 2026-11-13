@@ -44,7 +44,8 @@ Every section reference was checked against the official text on [e-Laws](https:
 
 ```
 src/
-  rules.ts      21 rules: pattern, severity, plain-English explanation, citations
+  rules.ts      26 rules (21 problems, 5 allowed clauses): pattern, severity,
+                plain-English explanation, citations
   analyze.ts    splits a lease into paragraphs and sentences, runs every rule
   main.ts       the page: paste, results, highlights (DOM only, no innerHTML)
 test/
