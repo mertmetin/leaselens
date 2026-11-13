@@ -40,6 +40,39 @@ It also recognises common clauses that **are** allowed (last month's rent deposi
 
 Every section reference was checked against the official text on [e-Laws](https://www.ontario.ca/laws/statute/06r17) (current to November 10, 2026), the [general regulation](https://www.ontario.ca/laws/regulation/060516), and Ontario's [guide to the standard lease](https://www.ontario.ca/page/guide-ontarios-standard-lease).
 
+## Use it from Claude (MCP server)
+
+The same rules engine also runs as a [Model Context Protocol](https://modelcontextprotocol.io) server, so Claude Code, Claude Desktop or any MCP client can check a lease, or run Ontario home-buying numbers, mid-conversation. Everything still runs on your machine: no tool makes a network request.
+
+| Tool | What it does |
+|---|---|
+| `check_lease` | Lease text in; every void or questionable clause out, with the quoted words, an explanation and the section of the law |
+| `list_rules`, `explain_rule` | What LeaseLens checks, and the law behind each rule, with links to the official text |
+| `ontario_land_transfer_tax` | Ontario tax plus Toronto's municipal tax (graduated rates from April 1, 2026), first-time buyer refunds (up to $4,000 and $4,475) and non-resident taxes |
+| `mortgage_payment` | Canadian fixed-rate payment with semi-annual compounding: monthly, bi-weekly, weekly or accelerated, with total interest and payoff time |
+
+**Claude Code**
+
+```bash
+claude mcp add leaselens -- npx -y github:mertmetin/leaselens
+```
+
+**Claude Desktop** (`claude_desktop_config.json`)
+
+```json
+{
+  "mcpServers": {
+    "leaselens": { "command": "npx", "args": ["-y", "github:mertmetin/leaselens"] }
+  }
+}
+```
+
+Or from a clone: `npm install && npm run build:mcp`, then point your client at `node /path/to/leaselens/dist-mcp/leaselens-mcp.js`.
+
+Then ask things like *"Check this lease for anything my landlord can't enforce"* or *"What's the land transfer tax on an $850,000 condo in Toronto for a first-time buyer, and the monthly payment with 20% down at 4.5%?"*
+
+Land transfer tax rates were checked against [Ontario's](https://www.ontario.ca/document/land-transfer-tax/calculating-land-transfer-tax) and [Toronto's](https://www.toronto.ca/services-payments/property-taxes-utilities/municipal-land-transfer-tax-mltt/municipal-land-transfer-tax-mltt-rates-and-fees/) official pages in November 2026.
+
 ## How it works
 
 ```
@@ -48,14 +81,18 @@ src/
                 plain-English explanation, citations
   analyze.ts    splits a lease into paragraphs and sentences, runs every rule
   main.ts       the page: paste, results, highlights (DOM only, no innerHTML)
+  finance.ts    land transfer tax brackets and Canadian mortgage maths
+  mcp/          the MCP server (official TypeScript SDK) and its stdio entry point
 test/
-  rules.test.ts 136 tests: for every rule, clauses that must be flagged
-                and similar ones that must not
+  rules.test.ts   136 tests: for every rule, clauses that must be flagged
+                  and similar ones that must not
+  finance.test.ts tax brackets worked by hand from the official rates, mortgage maths
+  mcp.test.ts     end to end through a real MCP client
 ```
 
 Rules are deliberately transparent pattern matchers rather than a black-box model, so every flag can be traced to a rule and a section of the law. Each rule has guards against common false alarms. For example, "tenant pays for **all** repairs" is void, but "tenant pays for damage **they cause**" is allowed (s. 34), and "the deposit will be **returned**" isn't a bounced cheque.
 
-TypeScript, Vite and Vitest; no runtime dependencies. GitHub Actions runs type-checking, tests and a build on every push, and deploys `main` to GitHub Pages.
+TypeScript, Vite and Vitest; the website has no runtime dependencies, and the MCP server is bundled into a single file. GitHub Actions runs type-checking, 161 tests and both builds on every push, and deploys `main` to GitHub Pages.
 
 ## Run it
 
